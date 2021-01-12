@@ -20,6 +20,13 @@ use App\Http\Controllers\MovieController;
 //});
 
 Route::prefix('v1/')->group(function() {
+    Route::post('/auth/login', [ MovieController::class, 'login' ]);
+
+    Route::middleware(['api'])->group(function() {
+        Route::get('/admin/info', [ MovieController::class, 'webAdminInfo' ]);
+        Route::get('/auth/check', [ MovieController::class, 'verify' ]);
+    });
+
     Route::get('/movies', [ MovieController::class, 'index' ]);
     Route::get('/movies/sort/year', [ MovieController::class, 'sortByYear' ]);
     Route::get('/movies/search/{keyword}', [ MovieController::class, 'searchKeyword' ]);

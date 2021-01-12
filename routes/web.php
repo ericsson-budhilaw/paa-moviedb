@@ -19,4 +19,7 @@ use App\Http\Controllers\BaseController;
 //    echo "<img src=" . $movie[2]->poster . "/>";
 //});
 
-Route::get('/', [ BaseController::class, 'index' ]);
+//Route::get('/', [ BaseController::class, 'index' ]);
+Route::get('/{any}', function() {
+    return view('layouts.app');
+})->where('any', '.*');

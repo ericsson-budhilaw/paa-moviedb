@@ -7,7 +7,7 @@
                 <div class="mt-12">
                     <div>
                         <div class="text-sm font-bold text-gray-700 tracking-wide">Email Address</div>
-                        <input v-model="username" class="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="" placeholder="mike@gmail.com">
+                        <input v-model="email" class="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="" placeholder="mike@gmail.com">
                     </div>
                     <div class="mt-8">
                         <div class="flex justify-between items-center">
@@ -21,7 +21,7 @@
                                 </a>
                             </div>
                         </div>
-                        <input v-model="password" class="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="" placeholder="Enter your password">
+                        <input v-model="password" class="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="password" placeholder="Enter your password">
                     </div>
                     <div class="mt-10">
                         <button v-on:click="Login()" class="bg-indigo-500 text-gray-100 p-4 w-full rounded-full tracking-wide
@@ -76,18 +76,45 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
     name: "Login.vue",
     data() {
         return {
-            username: null,
+            email: null,
             password: null
+        }
+    },
+    created: function() {
+        let token = localStorage.access_token;
+        if(token) {
+            axios.get('https://paa-moviedb.test/api/v1/auth/check', {
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                }
+            }).then(json => {
+                    if(json.data.valid) {
+                        this.$router.push({ name: 'Home' })
+                    }
+                })
         }
     },
     methods: {
         Login: function() {
-            console.log("Username", this.username);
-            console.log("Password", this.password);
+            const data = {
+                email: this.email,
+                password: this.password
+            };
+
+            axios.post('https://paa-moviedb.test/api/v1/auth/login', data)
+                .then(json => {
+                    localStorage.access_token = json.data.access_token;
+                    this.$router.push({name: 'Home'});
+                }).catch(err => {
+                    this.error = err.response.data;
+                    setTimeout(() => this.error = null, 1100);
+                }).then(() => this.loading = false)
         }
     }
 }

@@ -31176,6 +31176,18 @@ video {
   display: none;
 }
 
+.bg-black-alt  {
+  background:#191919;
+}
+
+.text-black-alt  {
+  color:#191919;
+}
+
+.border-black-alt {
+  border-color: #191919;
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;
@@ -183900,4 +183912,3 @@ video {
             animation: bounce 1s infinite;
   }
 }
-
